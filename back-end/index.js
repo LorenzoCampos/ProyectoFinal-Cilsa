@@ -4,11 +4,23 @@ const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const cors = require("cors"); // Importa CORS
 
 // Configuración inicial
 const app = express();
 const PORT = 3000;
-app.use(bodyParser.json());
+
+// Middlewares
+app.use(bodyParser.json()); // Parsear el cuerpo de las solicitudes en JSON
+app.use(cors()); // Habilitar CORS para todos los orígenes
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Configuración de la base de datos SQLite
 const sequelize = new Sequelize({
