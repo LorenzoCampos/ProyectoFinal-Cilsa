@@ -10,13 +10,6 @@ const app = express();
 const PORT = 3000;
 app.use(bodyParser.json());
 
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.send();
-});
-
 const cors = require("cors");
 app.use(cors());
 
@@ -68,6 +61,11 @@ const authenticateToken = async (req, res, next) => {
 };
 
 // Rutas
+// Test
+app.get('/', (req, res) => {
+  res.send('¡Servidor funcionando!');
+});
+
 // Registro
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -118,7 +116,7 @@ app.post("/logout", authenticateToken, async (req, res) => {
 
 // Crear tarea
 app.post("/tasks", authenticateToken, async (req, res) => {
-  const { title } = req.body;
+  const { title, description } = req.body;
   if (!title) return res.status(400).json({ error: "El título es requerido" });
 
   const task = await Task.create({ title, description, UserId: req.user.id });
