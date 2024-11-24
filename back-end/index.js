@@ -10,6 +10,16 @@ const app = express();
 const PORT = 3000;
 app.use(bodyParser.json());
 
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.send();
+});
+
+const cors = require("cors");
+app.use(cors());
+
 // Configuración de la base de datos SQLite
 const sequelize = new Sequelize({
   dialect: "sqlite",
@@ -26,6 +36,12 @@ const User = sequelize.define("User", {
 const Task = sequelize.define("Task", {
   title: { type: DataTypes.STRING, allowNull: false },
   completed: { type: DataTypes.BOOLEAN, defaultValue: false },
+  description: { type: DataTypes.STRING, allowNull: true },
+});
+
+// Modelo para almacenar tokens válidos
+const Token = sequelize.define("Token", {
+  token: { type: DataTypes.STRING, allowNull: false },
 });
 
 // Relación: Un usuario tiene muchas tareas
@@ -33,15 +49,22 @@ User.hasMany(Task);
 Task.belongsTo(User);
 
 // Middleware para verificar JWT
-const authenticateToken = (req, res, next) => {
+const authenticateToken = async (req, res, next) => {
   const token = req.header("Authorization")?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Token requerido" });
 
-  jwt.verify(token, "SECRET_KEY", (err, user) => {
-    if (err) return res.status(403).json({ error: "Token inválido" });
-    req.user = user;
+  try {
+    const payload = jwt.verify(token, "SECRET_KEY");
+
+    // Verifica si el token está en la lista de tokens válidos
+    const validToken = await Token.findOne({ where: { token } });
+    if (!validToken) return res.status(403).json({ error: "Token inválido" });
+
+    req.user = payload;
     next();
-  });
+  } catch (err) {
+    res.status(403).json({ error: "Token inválido" });
+  }
 };
 
 // Rutas
@@ -74,10 +97,23 @@ app.post("/login", async (req, res) => {
 
   const token = jwt.sign(
     { id: user.id, username: user.username },
-    "SECRET_KEY",
-    { expiresIn: "1h" }
+    "SECRET_KEY"
   );
-  res.json({ token });
+
+  // Guarda el token en la base de datos
+  await Token.create({ token });
+
+  res.status(200).json({ token });
+});
+
+// Cerrar Sesión (elimina el token)
+app.post("/logout", authenticateToken, async (req, res) => {
+  const token = req.header("Authorization")?.split(" ")[1];
+
+  // Elimina el token de la lista de tokens válidos
+  await Token.destroy({ where: { token } });
+
+  res.status(204).send();
 });
 
 // Crear tarea
@@ -85,14 +121,14 @@ app.post("/tasks", authenticateToken, async (req, res) => {
   const { title } = req.body;
   if (!title) return res.status(400).json({ error: "El título es requerido" });
 
-  const task = await Task.create({ title, UserId: req.user.id });
+  const task = await Task.create({ title, description, UserId: req.user.id });
   res.status(201).json(task);
 });
 
 // Obtener tareas
 app.get("/tasks", authenticateToken, async (req, res) => {
   const tasks = await Task.findAll({ where: { UserId: req.user.id } });
-  res.json(tasks);
+  res.status(200).json(tasks);
 });
 
 // Actualizar tarea
@@ -105,8 +141,9 @@ app.put("/tasks/:id", authenticateToken, async (req, res) => {
 
   if (title !== undefined) task.title = title;
   if (completed !== undefined) task.completed = completed;
+  if (description !== undefined) task.description = description;
   await task.save();
-  res.json(task);
+  res.status(200).json(task);
 });
 
 // Eliminar tarea
