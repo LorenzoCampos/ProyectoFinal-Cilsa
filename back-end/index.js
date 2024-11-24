@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { Sequelize, DataTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 
 // Configuración inicial
 const app = express();
