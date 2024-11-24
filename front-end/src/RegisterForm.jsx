@@ -19,7 +19,7 @@ const RegisterForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("https://lkfc51ph-3000.brs.devtunnels.ms/register", formData);
+            const response = await axios.post("http://localhost:3000/register", formData);
 
             setSuccess("Usuario registrado exitosamente!");
             setError("");

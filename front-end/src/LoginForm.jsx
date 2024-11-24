@@ -21,7 +21,7 @@ const LoginForm = () => {
 
         try {
             const response = await axios.post(
-                "https://lkfc51ph-3000.brs.devtunnels.ms/login",
+                "http://localhost:3000/login",
                 formData
             );
             const token = response.data.token;
