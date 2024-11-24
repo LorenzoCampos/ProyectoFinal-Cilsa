@@ -1,20 +1,27 @@
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 
 const Form = () => {
-
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState("");
     const [token, setToken] = useState("");
 
+    // Obtener el token al cargar el componente
+    useEffect(() => {
+        const savedToken = localStorage.getItem("authToken");
+        if (savedToken) {
+            setToken(savedToken);
+        }
+    }, []);
 
     // Obtener las tareas al cargar el componente
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const response = await axios.get("https://lkfc51ph-3000.brs.devtunnels.ms/", {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                const response = await axios.get(
+                    "https://lkfc51ph-3000.brs.devtunnels.ms/tasks",
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
                 setTasks(response.data);
             } catch (error) {
                 console.error("Error al obtener tareas:", error);
@@ -30,11 +37,9 @@ const Form = () => {
 
         try {
             const response = await axios.post(
-                "https://lkfc51ph-3000.brs.devtunnels.ms/",
+                "https://lkfc51ph-3000.brs.devtunnels.ms/tasks",
                 { title: newTask },
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
+                { headers: { Authorization: `Bearer ${token}` } }
             );
             setTasks([...tasks, response.data]); // Agrega la nueva tarea al estado
             setNewTask(""); // Limpia el input
@@ -76,6 +81,5 @@ const Form = () => {
         </div>
     );
 };
-
 
 export default Form;

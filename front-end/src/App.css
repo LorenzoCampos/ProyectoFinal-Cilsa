@@ -2,10 +2,10 @@
   font-family: sans-serif;
 }
 
-.register-bg{
+.register-bg, .login-bg{
   background-color: rgb(11, 40, 65);
 }
 
-.register-form{
-  background-color: rgb(255, 255, 255);
+.register-form, .login-form{
+  background-color: rgb(223, 234, 248);
 }
