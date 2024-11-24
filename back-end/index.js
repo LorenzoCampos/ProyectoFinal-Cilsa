@@ -132,7 +132,7 @@ app.get("/tasks", authenticateToken, async (req, res) => {
 // Actualizar tarea
 app.put("/tasks/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { title, completed } = req.body;
+  const { title, completed, description } = req.body;
 
   const task = await Task.findOne({ where: { id, UserId: req.user.id } });
   if (!task) return res.status(404).json({ error: "Tarea no encontrada" });
