@@ -123,6 +123,7 @@ const Form = () => {
         <div className="container mt-5">
             <div className="row justify-content-center">
                 <div className="col-12 col-md-8">
+                <h1 className="text-center">Administrador de tareas</h1>
                     <form onSubmit={handleSubmit}>
                         <div className="input-group p-4">
                             <input
@@ -131,6 +132,7 @@ const Form = () => {
                                 placeholder="Ingrese su tarea..."
                                 value={newTask}
                                 onChange={(e) => setNewTask(e.target.value)}
+                                required
                             />
                             <button className="btn btn-primary ms-2" type="submit">
                                 {editTask ? "Actualizar" : "Agregar"}
