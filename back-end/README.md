@@ -1,78 +1,22 @@
-# Todo List API
+```markdown
+# ToDo List API
 
-Una API backend para gestionar tareas (todo list) con autenticación de usuarios. Desarrollada con Node.js, Express y SQLite.
+Esta es una API RESTful para una aplicación de lista de tareas (ToDo List), donde los usuarios pueden registrarse, iniciar sesión, crear, actualizar, obtener y eliminar tareas. Está construida con **Express.js** y **SQLite** como base de datos. La autenticación se maneja a través de **JWT** (JSON Web Tokens) y **bcryptjs** para el hashing de contraseñas.
 
 ## Características
 
-- **Autenticación JWT**: Registro, inicio de sesión, cierre de sesión.
-- **Gestión de tareas**: Crear, leer, actualizar y eliminar tareas por usuario.
-- **Base de datos SQLite**: Persistencia de datos.
-- **Middleware de autenticación**: Verifica los tokens JWT en las rutas protegidas.
+- **Autenticación**: Registro de usuarios, inicio de sesión y cierre de sesión.
+- **Gestión de tareas**: CRUD (Crear, Leer, Actualizar, Eliminar) de tareas para cada usuario.
+- **Middleware de autenticación**: Protege las rutas de tareas para que solo usuarios autenticados puedan acceder.
+- **Base de datos**: Utiliza **SQLite** como base de datos para almacenar usuarios, tareas y tokens válidos.
 
-## Requisitos previos
+## Estructura del Proyecto
 
-Asegúrate de tener instalado:
-
-- [Node.js](https://nodejs.org/) v16 o superior
-- [npm](https://www.npmjs.com/) (incluido con Node.js)
-
-## Instalación
-
-1. Clona el repositorio:
-
-   ```bash
-   git clone https://github.com/tu-usuario/todo-list-api.git
-   cd todo-list-api
-   ```
-
-2. Instala las dependencias:
-
-   ```bash
-   npm install
-   ```
-
-3. Crea un archivo `.env` en la raíz del proyecto y configura tus variables de entorno. Por ejemplo:
-
-   ```plaintext
-   SECRET_KEY=tu_clave_secreta
-   ```
-
-4. Inicia el servidor:
-
-   ```bash
-   npm start
-   ```
-
-   El servidor estará corriendo en `http://localhost:3000`.
-
-## Endpoints
-
-### Autenticación
-
-| Método | Endpoint       | Descripción            |
-|--------|----------------|------------------------|
-| POST   | `/register`    | Registro de usuario    |
-| POST   | `/login`       | Inicio de sesión       |
-| POST   | `/logout`      | Cierre de sesión       |
-
-### Tareas
-
-| Método | Endpoint          | Descripción                  |
-|--------|-------------------|------------------------------|
-| GET    | `/tasks`          | Listar tareas del usuario    |
-| POST   | `/tasks`          | Crear una nueva tarea        |
-| PUT    | `/tasks/:id`      | Actualizar una tarea         |
-| DELETE | `/tasks/:id`      | Eliminar una tarea           |
-
-## Estructura del proyecto
-
-```
+```plaintext
 back-end/
 ├── controllers/
 │   ├── authController.js
 │   ├── taskController.js
-├── middleware/
-│   ├── authenticate.js
 ├── models/
 │   ├── userModel.js
 │   ├── taskModel.js
@@ -83,23 +27,89 @@ back-end/
 ├── .gitignore
 ├── database.sqlite
 ├── index.js
+├── database.js
+├── middleware.js
 ├── package.json
 ├── README.md
 ```
 
-## Tecnologías utilizadas
+## Instalación
 
-- **Node.js**: Entorno de ejecución para JavaScript.
-- **Express.js**: Framework para crear el servidor.
-- **SQLite**: Base de datos ligera.
-- **Sequelize**: ORM para interactuar con SQLite.
-- **jsonwebtoken**: Para la autenticación mediante JWT.
-- **bcryptjs**: Para el cifrado de contraseñas.
+1. Clona este repositorio:
+   ```bash
+   git clone https://github.com/LorenzoCampos/ProyectoFinal-Cilsa.git
+   ```
+
+2. Navega al directorio del proyecto:
+   ```bash
+   cd ProyectoFinal-Cilsa
+   cd back-end
+   ```
+
+3. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+4. Crea la base de datos y las tablas (el proyecto usará SQLite automáticamente):
+   ```bash
+   node index.js
+   ```
+
+   Esto iniciará el servidor y creará el archivo `database.sqlite` si aún no existe.
+
+## Dependencias
+
+- `bcryptjs`: Para el hashing de contraseñas.
+- `body-parser`: Para analizar los cuerpos de las solicitudes HTTP.
+- `cors`: Para habilitar el intercambio de recursos de origen cruzado.
+- `express`: Framework web para Node.js.
+- `jsonwebtoken`: Para la creación y verificación de tokens JWT.
+- `sequelize`: ORM para interactuar con la base de datos SQLite.
+- `sqlite3`: Driver SQLite para Node.js.
+
+## Rutas
+
+### **Autenticación**
+
+- `POST /register`: Registra un nuevo usuario. Requiere `username` y `password`.
+- `POST /login`: Inicia sesión y genera un token. Requiere `username` y `password`.
+- `POST /logout`: Cierra sesión y elimina el token. Requiere un token en el encabezado `Authorization`.
+
+### **Tareas**
+
+- `POST /tasks`: Crea una nueva tarea. Requiere `title` (obligatorio) y `description` (opcional).
+- `GET /tasks`: Obtiene todas las tareas del usuario autenticado.
+- `PUT /tasks/:id`: Actualiza una tarea existente. Requiere `title`, `completed`, `description`.
+- `DELETE /tasks/:id`: Elimina una tarea existente.
+
+## Middleware de Autenticación
+
+Para acceder a las rutas relacionadas con las tareas (`/tasks`), debes enviar un token válido en el encabezado `Authorization` de tus solicitudes. El token se genera al iniciar sesión.
+
+## Ejecutando el Proyecto
+
+1. Asegúrate de tener **Node.js** instalado.
+2. Desde el directorio raíz de tu proyecto, ejecuta:
+   ```bash
+   npm start
+   ```
+   Esto iniciará el servidor en `http://localhost:3000`.
+
+## Base de Datos
+
+El proyecto utiliza **SQLite** como base de datos. La base de datos se gestiona automáticamente mediante **Sequelize** y se guarda en el archivo `database.sqlite`.
+
+### Modelos
+
+- **Usuario (`User`)**: Contiene `username` y `password`.
+- **Tarea (`Task`)**: Contiene `title`, `description`, `completed` y una relación con un usuario (`UserId`).
+- **Token (`Token`)**: Almacena los tokens JWT para la autenticación de los usuarios.
 
 ## Contribuciones
 
-¡Las contribuciones son bienvenidas! Por favor, abre un *issue* o envía un *pull request*.
+Si deseas contribuir a este proyecto, por favor haz un **fork**, crea una rama con tu característica o corrección, y luego abre un **pull request**.
 
 ## Licencia
 
-Este proyecto está bajo la licencia MIT. Consulta el archivo `LICENSE` para más información.
+Este proyecto está bajo la licencia **MIT**. Para más detalles, revisa el archivo `LICENSE`.
