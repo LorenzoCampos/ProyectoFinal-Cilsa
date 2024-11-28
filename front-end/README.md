@@ -1,4 +1,3 @@
-```markdown
 # ToDo List App
 
 ## Descripción
