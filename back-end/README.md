@@ -1,4 +1,3 @@
-```markdown
 # ToDo List API
 
 Esta es una API RESTful para una aplicación de lista de tareas (ToDo List), donde los usuarios pueden registrarse, iniciar sesión, crear, actualizar, obtener y eliminar tareas. Está construida con **Express.js** y **SQLite** como base de datos. La autenticación se maneja a través de **JWT** (JSON Web Tokens) y **bcryptjs** para el hashing de contraseñas.
