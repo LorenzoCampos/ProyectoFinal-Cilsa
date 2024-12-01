@@ -20,7 +20,7 @@ const Form = () => {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const response = await axios.get("https://proyectofinal-cilsa.onrender.com/tasks", {
+                const response = await axios.get("https://proyectofinal-cilsa-back-end.onrender.com/tasks", {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setTasks(response.data);
@@ -39,7 +39,7 @@ const Form = () => {
         if (editTask) {
             try {
                 const response = await axios.put(
-                    `https://proyectofinal-cilsa.onrender.com/tasks/${editTask.id}`,
+                    `https://proyectofinal-cilsa-back-end.onrender.com/tasks/${editTask.id}`,
                     { title: newTask },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -56,7 +56,7 @@ const Form = () => {
         } else {
             try {
                 const response = await axios.post(
-                    "https://proyectofinal-cilsa.onrender.com/tasks",
+                    "https://proyectofinal-cilsa-back-end.onrender.com/tasks",
                     { title: newTask },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -71,7 +71,7 @@ const Form = () => {
     // Función para eliminar tarea
     const handleDelete = async (taskId) => {
         try {
-            await axios.delete(`https://proyectofinal-cilsa.onrender.com/tasks/${taskId}`, {
+            await axios.delete(`https://proyectofinal-cilsa-back-end.onrender.com/tasks/${taskId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setTasks(tasks.filter((task) => task.id !== taskId));
@@ -91,7 +91,7 @@ const Form = () => {
         try {
             const task = tasks.find((task) => task.id === taskId);
             const updatedTask = await axios.put(
-                `https://proyectofinal-cilsa.onrender.com/tasks/${taskId}`,
+                `https://proyectofinal-cilsa-back-end.onrender.com/tasks/${taskId}`,
                 { completed: !task.completed },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

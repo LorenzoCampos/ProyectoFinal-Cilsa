@@ -19,7 +19,7 @@ const RegisterForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("https://proyectofinal-cilsa.onrender.com/register", formData);
+            const response = await axios.post("https://proyectofinal-cilsa-back-end.onrender.com/register", formData);
 
             setSuccess("Usuario registrado exitosamente!");
             setError("");
