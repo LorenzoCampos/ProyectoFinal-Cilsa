@@ -9,9 +9,8 @@ const taskRoutes = require("./routes/taskRoutes");
 const app = express();
 const PORT = 3000;
 
-// Middlewares
-app.use(bodyParser.json()); // Parsear el cuerpo de las solicitudes en JSON
-app.use(cors()); // Habilitar CORS para todos los orígenes
+app.use(cors());
+app.use(bodyParser.json());
 
 app.use("/", authRoutes);
 app.use("/", taskRoutes);
