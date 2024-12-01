@@ -1,0 +1,20 @@
+#root{
+  font-family: sans-serif;
+}
+
+.register-bg, .login-bg{
+  background-color: rgb(11, 40, 65);
+}
+
+.register-form, .login-form{
+  background-color: rgb(223, 234, 248);
+}
+/* tareas completadas con fondo verde */
+.list-group-item-success {
+  background-color: #d4edda !important;
+}
+
+/* También puedes cambiar el color del texto */
+.list-group-item-success strong {
+  color: #28a745; /* Verde */
+}
