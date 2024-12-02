@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import apiClient from './api/apiClient';
 
 const Navbar = () => {
@@ -13,8 +12,6 @@ const Navbar = () => {
     day: "numeric",
   });
 
-  const navigate = useNavigate();
-
   const token = localStorage.getItem("authToken");
 
   // Manejar cerrar sesión
@@ -22,7 +19,7 @@ const Navbar = () => {
     try {
       await apiClient.post('/logout');
       localStorage.removeItem('authToken');
-      navigate('/login');
+      window.location.href = "/login";
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
