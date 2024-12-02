@@ -63,7 +63,7 @@ const login = async (req, res) => {
   }
 
   if (!user || !(await bcrypt.compare(password, user.password)))
-    return res.status(401).json({ error: "Credenciales inválidas" });
+    return res.status(400).json({ error: "Credenciales inválidas" });
 
   const token = jwt.sign(
     { id: user.id, username: user.username },
